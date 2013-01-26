@@ -32,6 +32,11 @@ public class Score : MonoBehaviour {
     {
         multiplier = value;
     }
+
+    public int GetScore()
+    {
+        return score;
+    }
     
     void Start () {
 	

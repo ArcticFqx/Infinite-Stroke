@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class PumpIndicator : MonoBehaviour {
+public class HealthIndicator : MonoBehaviour {
 
     PlayerControl player;
     UISlider heartBar;
-    private float slidePos = 0;
+
     void Start()
     {
         heartBar = GetComponent<UISlider>();
@@ -20,8 +20,6 @@ public class PumpIndicator : MonoBehaviour {
 
     void Update()
     {
-        slidePos = player.rate / (player.heart ? 0.45f : -0.25f);
-        if (!player.heart) slidePos += 1;
-        UpdateSlider(slidePos);
+        UpdateSlider(player.health/100);
     }
 }

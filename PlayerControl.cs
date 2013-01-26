@@ -20,7 +20,7 @@ public class PlayerControl : MonoBehaviour
     private bool alive;
     private float damageDelay;
 
-    private bool heart;
+    public bool heart;
     public float rate;
     public float indicator;
     public float rateMul;
@@ -117,11 +117,15 @@ public class PlayerControl : MonoBehaviour
                 controller.height = 0.5f;
                 anim.PlaySlideAnimation();
             }
+            else if (isSliding && !Input.GetKey(KeyCode.DownArrow))
+            {
+                controller.transform.Translate(0, 0.2f, 0);
+                controller.radius = 0.26f;
+                controller.height = 1.46f;
+            }
             else if (!Input.GetKey(KeyCode.DownArrow))
             {
                 anim.PlayRunAnimation(speed / speedAnimRatio);
-                controller.radius = 0.26f;
-                controller.height = 1.46f;
             }
 
             moveVector = new Vector3(speed, 0.0f, 0.0f);
@@ -131,6 +135,7 @@ public class PlayerControl : MonoBehaviour
                 moveVector.y = jumpSpeed;
                 isJumping = true;
             }
+
             isSliding = Input.GetKey(KeyCode.DownArrow);
         }
         if (!controller.isGrounded && isJumping)
