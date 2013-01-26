@@ -1,0 +1,175 @@
+using UnityEngine;
+using System.Collections;
+
+public class PlayerControl : MonoBehaviour {
+
+
+    private bool first;
+
+    private float speed;
+    public float speedAnimRatio = 3.5f;
+    public float maxSpeed;
+
+    private float gravity;
+
+    private float jumpSpeed;
+    private float health;
+
+    private bool heart;
+    public float rate;
+    private float rateMul;
+
+    private Score score;
+
+    private Vector3 moveVector = Vector3.zero;
+
+    private AnimControl anim;
+
+    public CollideEffects coEffect;
+
+    private CharacterController controller;
+
+    private float zAxis = 0.0f;
+   private Vector3 playerPosition;
+   
+	// Use this for initialization
+	void Start () 
+    {   
+        gravity = 20;
+        jumpSpeed = 10.0f;
+        heart = false;
+        speed = 6;
+        health = 100;
+        rate = 0;
+        rateMul = 1;
+        controller = GetComponent<CharacterController>();
+        anim = GameObject.FindGameObjectWithTag("Fatty").GetComponent<AnimControl>();
+        score = GetComponent<Score>();
+        maxSpeed = 8;
+        coEffect = GetComponent<CollideEffects>();
+	}
+	
+	// Update is called once per frame
+    void Update()
+    {
+        playerPosition = new Vector3(transform.position.x, transform.position.y, -1.0f);
+        transform.position = playerPosition;
+        Beat();
+        MoveCharacter();
+
+        if (CollidedWithObject())
+        {
+            {
+                coEffect.OnCrash();
+                Debug.Log("CRASH!");
+            }
+        }
+        
+	}
+
+    bool CollidedWithObject()
+    {
+        return (controller.collisionFlags & CollisionFlags.CollidedSides) != 0;
+    }
+
+    void MoveCharacter()
+    {
+        if (controller.isGrounded)
+        {
+            anim.PlayRunAnimation(speed / speedAnimRatio);
+
+            moveVector = new Vector3(speed, 0.0f, 0.0f);
+            
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            moveVector.y = jumpSpeed;
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            Debug.Log("Slide");
+        }
+        }
+        if (!controller.isGrounded)
+        {
+            anim.PlayJumpAnimation();
+        }
+
+        moveVector.y -= gravity * Time.deltaTime;
+        controller.Move(moveVector * Time.deltaTime);
+
+    }
+
+    void Beat()
+    {
+        float keyHeartRaw = Input.GetAxisRaw("Heart");
+        bool keyHeart = Input.GetButtonDown("Heart");
+        rate -= Time.deltaTime * rateMul;
+        float beat = 1 - Mathf.Abs(rate);
+        float acc = 2;
+
+        if (keyHeart)
+        {
+            float timing = Mathf.Abs(rate * acc);
+            if (first)
+            {
+                speed += 4 / (speed + 4);
+                heart = keyHeartRaw > 0;
+                rate = heart ? 0.45f : 0.25f;
+                score.IncreaseScore((int)timing * 5);
+                first = false;
+            }
+            else if (!heart && keyHeartRaw > 0)
+            {
+                speed += (maxSpeed - 2) / (speed + 2) - timing;
+                heart = true;
+                SetRateTime();
+                print("Beat: " + beat);
+                score.IncreaseScore((int)timing*5);
+            }
+            else if (heart && keyHeartRaw < 0)
+            {
+                speed += (maxSpeed - 2) / (speed + 2) - timing;
+                heart = false;
+                SetRateTime();
+                print("Beat: " + beat);
+                score.IncreaseScore((int)timing * 5);
+            }
+            else if (keyHeartRaw != 0 && speed > 0)
+            {
+                speed -= 2.5f;
+            }
+        }
+        else if (speed > 0)
+        {
+            speed -= Time.deltaTime * 2;
+        }
+        speed = speed > 2 ? speed : 2;
+    }
+
+    void SetRateTime()
+    {
+        rate = heart ? 0.45f/rateMul : 0.25f/rateMul;
+    }
+
+    void SubHealth(float h)
+    {
+        health -= h;
+        print("Health: " + health); 
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Dog")
+            SubHealth(5);
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.name == "Dog")
+            SubHealth(50 * Time.deltaTime);
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+}
