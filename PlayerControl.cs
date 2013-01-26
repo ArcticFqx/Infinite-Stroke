@@ -9,6 +9,8 @@ public class PlayerControl : MonoBehaviour {
     private float speed;
     public float speedAnimRatio = 3.5f;
     public float maxSpeed;
+    private bool isJumping = false;
+    private bool isSliding = false;
 
     private float gravity;
 
@@ -16,22 +18,16 @@ public class PlayerControl : MonoBehaviour {
     private float health;
 
     private bool heart;
-    public float rate;
+    private float rate;
     private float rateMul;
 
     private Score score;
 
     private Vector3 moveVector = Vector3.zero;
-
+    private Vector3 playerPosition;
     private AnimControl anim;
 
-    public CollideEffects coEffect;
-
     private CharacterController controller;
-
-    private float zAxis = 0.0f;
-   private Vector3 playerPosition;
-   
 	// Use this for initialization
 	void Start () 
     {   
@@ -46,7 +42,7 @@ public class PlayerControl : MonoBehaviour {
         anim = GameObject.FindGameObjectWithTag("Fatty").GetComponent<AnimControl>();
         score = GetComponent<Score>();
         maxSpeed = 8;
-        coEffect = GetComponent<CollideEffects>();
+        isJumping = false;
 	}
 	
 	// Update is called once per frame
@@ -56,46 +52,34 @@ public class PlayerControl : MonoBehaviour {
         transform.position = playerPosition;
         Beat();
         MoveCharacter();
-
-        if (CollidedWithObject())
-        {
-            {
-                coEffect.OnCrash();
-                Debug.Log("CRASH!");
-            }
-        }
-        
 	}
-
-    bool CollidedWithObject()
-    {
-        return (controller.collisionFlags & CollisionFlags.CollidedSides) != 0;
-    }
 
     void MoveCharacter()
     {
         if (controller.isGrounded)
         {
-            anim.PlayRunAnimation(speed / speedAnimRatio);
+            if( !isSliding && Input.GetKey(KeyCode.DownArrow)  )
+                anim.PlaySlideAnimation();
+            else if(!Input.GetKey(KeyCode.DownArrow))
+                anim.PlayRunAnimation(speed / speedAnimRatio);
 
             moveVector = new Vector3(speed, 0.0f, 0.0f);
-            
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            moveVector.y = jumpSpeed;
+       
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                moveVector.y = jumpSpeed;
+                isJumping = true;
+            }
+            isSliding = Input.GetKey(KeyCode.DownArrow);
         }
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (!controller.isGrounded && isJumping)
         {
-            Debug.Log("Slide");
-        }
-        }
-        if (!controller.isGrounded)
-        {
-            anim.PlayJumpAnimation();
+            isJumping = false;
         }
 
         moveVector.y -= gravity * Time.deltaTime;
         controller.Move(moveVector * Time.deltaTime);
+
 
     }
 
@@ -136,7 +120,7 @@ public class PlayerControl : MonoBehaviour {
             }
             else if (keyHeartRaw != 0 && speed > 0)
             {
-                speed -= 2.5f;
+                speed -= 1.75f;
             }
         }
         else if (speed > 0)
@@ -154,7 +138,6 @@ public class PlayerControl : MonoBehaviour {
     void SubHealth(float h)
     {
         health -= h;
-        print("Health: " + health); 
     }
 
     void OnTriggerEnter(Collider other)
@@ -170,6 +153,6 @@ public class PlayerControl : MonoBehaviour {
     }
     void OnCollisionEnter(Collision collision)
     {
-        
+        print("crash");
     }
 }

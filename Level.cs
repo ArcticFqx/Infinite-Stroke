@@ -14,7 +14,7 @@ public class Level : MonoBehaviour {
     public int numParts = 10;
     public int chunkUnloadDelay = 10;
     
-    private float offset = 4.0f;
+    private float offset = 7.768083f;
     private int previousRand = 0;
     private int modulesSpawned = 0;
     private int chunksSpawned = 0;
@@ -129,5 +129,5 @@ public class Level : MonoBehaviour {
 	}
 
  
-    }
+}
 

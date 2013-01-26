@@ -18,12 +18,13 @@ public class AnimControl : MonoBehaviour {
 
     public void PlayRunAnimation(float speed)
     {
-        animation.Play("Run");
+        animation.CrossFade("Run", 0.2f);
         animation["Run"].speed = speed;
     }
 
-    public void PlayJumpAnimation()
+    public void PlaySlideAnimation()
     {
-        animation.Play("Jump");
+        animation.wrapMode = WrapMode.Once; 
+        animation.CrossFade("Death", 0.2f);
     }
 }
