@@ -11,8 +11,8 @@ public class CollideEffects : MonoBehaviour {
     {
         if (!timedOut)
         {
-            GameObject particle = Instantiate(particlePrefab, new Vector3(transform.position.x,transform.position.y,-1.5f), Quaternion.identity) as GameObject;
             timedOut = true;
+            GameObject particle = Instantiate(particlePrefab, new Vector3(transform.position.x,transform.position.y,-1.5f), Quaternion.identity) as GameObject; 
         }
     }
 

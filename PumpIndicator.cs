@@ -15,11 +15,11 @@ public class PumpIndicator : MonoBehaviour {
     public void UpdateSlider(float progress)
     {
         heartBar.sliderValue = progress;
-        Debug.Log(heartBar.sliderValue);
+        //Debug.Log(heartBar.sliderValue);
     }
 
     void Update()
     {
-        UpdateSlider(player.rate);
+        UpdateSlider(player.health/100);
     }
 }

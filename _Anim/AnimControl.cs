@@ -27,4 +27,9 @@ public class AnimControl : MonoBehaviour {
         animation.wrapMode = WrapMode.Once; 
         animation.CrossFade("Death", 0.2f);
     }
+    public void PlayDeathAnimation()
+    {
+        animation.Play("Death");
+        animation["Run"].speed = 0.5f;
+    }
 }

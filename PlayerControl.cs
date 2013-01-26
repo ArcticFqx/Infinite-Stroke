@@ -16,15 +16,21 @@ public class PlayerControl : MonoBehaviour
     private float gravity;
 
     private float jumpSpeed;
-    private float health;
+    public float health;
+    private bool alive;
+    private float damageDelay;
 
     private bool heart;
     public float rate;
+    public float indicator;
     public float rateMul;
 
     public CollideEffects coEffect;
 
-    private Score score;
+    private float startPoint;
+    private float distanceRan;
+    public Score score;
+    private float scoreDelay = 1;
 
     private Vector3 moveVector = Vector3.zero;
 
@@ -42,13 +48,17 @@ public class PlayerControl : MonoBehaviour
         speed = 6;
         health = 100;
         rate = 0;
+        indicator = 1;
         rateMul = 1;
+        alive = true;
         controller = GetComponent<CharacterController>();
         anim = GameObject.FindGameObjectWithTag("Fatty").GetComponent<AnimControl>();
         score = GetComponent<Score>();
         maxSpeed = 8;
         coEffect = GetComponent<CollideEffects>();
         isJumping = false;
+        damageDelay = 0;
+        startPoint = transform.position.x;
     }
 
     // Update is called once per frame
@@ -56,15 +66,40 @@ public class PlayerControl : MonoBehaviour
     {
         playerPosition = new Vector3(transform.position.x, transform.position.y, -1.0f);
         transform.position = playerPosition;
+        
+        scoreDelay -= Time.deltaTime;
+        if(scoreDelay < 0)
+        {
+            distanceRan = transform.position.x - startPoint;
+            startPoint = transform.position.x;
+            score.IncreaseScore((int)distanceRan);
+            scoreDelay = 1;
+        }   
         Beat();
-        MoveCharacter();
+        if (health > 0)
+        {
+            MoveCharacter();
+        }
+        else if(alive)
+        {
+            anim.PlaySlideAnimation();
+            alive = false;
+            print("Dead");
+        }
+
+
         if (CollidedWithObject())
         {
             {
                 coEffect.OnCrash();
-                Debug.Log("CRASH!");
+                if(damageDelay < 0)
+                {
+                    health -= 5;
+                    damageDelay = 0.5f;
+                }
             }
         }
+        damageDelay -= Time.deltaTime;
     }
 
     bool CollidedWithObject()
@@ -77,9 +112,17 @@ public class PlayerControl : MonoBehaviour
         if (controller.isGrounded)
         {
             if (!isSliding && Input.GetKey(KeyCode.DownArrow))
+            {
+                controller.radius = 0.1f;
+                controller.height = 0.5f;
                 anim.PlaySlideAnimation();
+            }
             else if (!Input.GetKey(KeyCode.DownArrow))
+            {
                 anim.PlayRunAnimation(speed / speedAnimRatio);
+                controller.radius = 0.26f;
+                controller.height = 1.46f;
+            }
 
             moveVector = new Vector3(speed, 0.0f, 0.0f);
 
@@ -106,9 +149,10 @@ public class PlayerControl : MonoBehaviour
         float keyHeartRaw = Input.GetAxisRaw("Heart");
         bool keyHeart = Input.GetButtonDown("Heart");
         rate -= Time.deltaTime * rateMul;
+        rateMul += Time.deltaTime / 80;
         float beat = 1 - Mathf.Abs(rate);
         float acc = 2;
-
+        indicator = rate / (heart ? 0.45f : 0.25f);
         if (keyHeart)
         {
             float timing = Mathf.Abs(rate * acc);
@@ -172,5 +216,10 @@ public class PlayerControl : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         print("crash");
+    }
+
+    public void AddScore(int points)
+    {
+        score.IncreaseScore(points);
     }
 }

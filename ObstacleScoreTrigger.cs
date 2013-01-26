@@ -9,8 +9,12 @@ public class ObstacleScoreTrigger : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            Score score = Camera.mainCamera.GetComponent<Score>();
-            score.IncreaseScore(ScoreValue);
+            other.GetComponent<PlayerControl>().AddScore(5);
+            print("Score added");
         }
+    }
+    void DisableTrigge()
+    {
+        this.collider.isTrigger = false;
     }
 }
