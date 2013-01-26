@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerControl : MonoBehaviour {
+public class PlayerControl : MonoBehaviour
+{
 
 
     private bool first;
@@ -18,19 +19,23 @@ public class PlayerControl : MonoBehaviour {
     private float health;
 
     private bool heart;
-    private float rate;
-    private float rateMul;
+    public float rate;
+    public float rateMul;
+
+    public CollideEffects coEffect;
 
     private Score score;
 
     private Vector3 moveVector = Vector3.zero;
+
+    private float zAxis = 0.0f;
     private Vector3 playerPosition;
     private AnimControl anim;
 
     private CharacterController controller;
-	// Use this for initialization
-	void Start () 
-    {   
+    // Use this for initialization
+    void Start()
+    {
         gravity = 20;
         jumpSpeed = 10.0f;
         heart = false;
@@ -42,29 +47,42 @@ public class PlayerControl : MonoBehaviour {
         anim = GameObject.FindGameObjectWithTag("Fatty").GetComponent<AnimControl>();
         score = GetComponent<Score>();
         maxSpeed = 8;
+        coEffect = GetComponent<CollideEffects>();
         isJumping = false;
-	}
-	
-	// Update is called once per frame
+    }
+
+    // Update is called once per frame
     void Update()
     {
         playerPosition = new Vector3(transform.position.x, transform.position.y, -1.0f);
         transform.position = playerPosition;
         Beat();
         MoveCharacter();
-	}
+        if (CollidedWithObject())
+        {
+            {
+                coEffect.OnCrash();
+                Debug.Log("CRASH!");
+            }
+        }
+    }
+
+    bool CollidedWithObject()
+    {
+        return (controller.collisionFlags & CollisionFlags.CollidedSides) != 0;
+    }
 
     void MoveCharacter()
     {
         if (controller.isGrounded)
         {
-            if( !isSliding && Input.GetKey(KeyCode.DownArrow)  )
+            if (!isSliding && Input.GetKey(KeyCode.DownArrow))
                 anim.PlaySlideAnimation();
-            else if(!Input.GetKey(KeyCode.DownArrow))
+            else if (!Input.GetKey(KeyCode.DownArrow))
                 anim.PlayRunAnimation(speed / speedAnimRatio);
 
             moveVector = new Vector3(speed, 0.0f, 0.0f);
-       
+
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 moveVector.y = jumpSpeed;
@@ -108,7 +126,7 @@ public class PlayerControl : MonoBehaviour {
                 heart = true;
                 SetRateTime();
                 print("Beat: " + beat);
-                score.IncreaseScore((int)timing*5);
+                score.IncreaseScore((int)timing * 5);
             }
             else if (heart && keyHeartRaw < 0)
             {
@@ -132,7 +150,7 @@ public class PlayerControl : MonoBehaviour {
 
     void SetRateTime()
     {
-        rate = heart ? 0.45f/rateMul : 0.25f/rateMul;
+        rate = heart ? 0.45f / rateMul : 0.25f / rateMul;
     }
 
     void SubHealth(float h)
