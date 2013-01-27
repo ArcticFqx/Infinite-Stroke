@@ -5,52 +5,45 @@ public class NpcDog : MonoBehaviour {
 
     GameObject player;
     private float speed;
-    private float jump;
     private Vector3 moveVector = Vector3.zero;
-    private Vector3 playerPosition;
+    private Vector3 dogPosition;
     CharacterController dog;
 
 	// Use this for initialization
-	void Start () {
-        speed = 2;
-        jump = Random.value * 3 + 1;
+	void Start () 
+    {
+        speed = 0;
         player = GameObject.FindGameObjectWithTag("Player");
-        dog = GetComponent<CharacterController>();
+        dog = transform.parent.GetComponent<CharacterController>();
         moveVector.y = -10;
 	}
 	
 	// Update is called once per frame
     void Update()
     {
-        playerPosition = new Vector3(transform.position.x, transform.position.y, -1.0f);
-        transform.position = playerPosition;
-        if (jump < 0)
-        {
-            jump = Random.value * 3 + 1;
-        }
+        dog.transform.position =  new Vector3(dog.transform.position.x, dog.transform.position.y, -1.0f);
 
-        jump -= Time.deltaTime;
         float distance = player.transform.position.x - transform.position.x;
         if (distance > 0)
-        {
-            moveVector.x = Time.deltaTime * (distance/3 + 2);
-        }
+            moveVector.x = Time.deltaTime * (distance*1.5f + 2);
+        else
+            moveVector.x = 0;
 
         dog.Move(moveVector);
 	}
 
-    void SubSpeed(float s)
-    {
-        speed -= s;
-    }
-
     void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "PlayerTrigger")
+        {
+            other.GetComponent<Transform>().parent.GetComponent<PlayerControl>().health -= 5;
+        }
     }
-
     void OnTriggerStay(Collider other)
     {
-        //if(other.tag == "Player")
-            
+        if (other.tag == "PlayerTrigger")
+        {
+            other.GetComponent<Transform>().parent.GetComponent<PlayerControl>().health -= 0.025f;
+        }
     }
 }
