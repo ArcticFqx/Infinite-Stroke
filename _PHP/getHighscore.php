@@ -4,7 +4,7 @@ include("common.php");
 
 	$limit = safe($_POST['limit']);
 	$rn = 1;
-	$query = "SELECT * FROM $dbName . `scores` ORDER BY score LIMIT $limit";
+	$query = "SELECT * FROM $dbName . `scores` ORDER BY `score` DESC LIMIT $limit";
 
     $result = mysql_query($query);    
     $my_err = mysql_error();
@@ -23,7 +23,7 @@ include("common.php");
     for($i = 0; $i < $num_results; $i++)
     {
          $row = mysql_fetch_array($result);
-         echo $rn . '. ' . $row['name'] . "\t - \t " . $row['time'] . "\n";
+         echo $rn . '. ' . $row['name'] . "\t - \t " . $row['score'] . "\n";
 		 $rn++;
     }
 ?>

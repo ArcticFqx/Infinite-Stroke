@@ -3,13 +3,12 @@ using System.Collections;
 
 public class SubmitButton : MonoBehaviour {
 
+    private Highscore hs;
+
 	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    void OnClick()
+    {
+        hs = GameObject.FindGameObjectWithTag("highscore").GetComponent<Highscore>();
+        hs.Submit();
+    }
 }

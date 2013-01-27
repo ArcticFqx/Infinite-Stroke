@@ -8,7 +8,7 @@ function dbConnect()
 	global  $dbName;
 	global  $secretKey;
 
-	$link = mysql_connect('mysql.henchmangoon.com', 'infinitestroke', 'infinito10');
+	$link = mysql_connect('mysql.henchmangoon.com', 'infinitestroke', 'null');
 	
 	if(!$link)
 	{

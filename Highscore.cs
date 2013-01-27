@@ -40,13 +40,7 @@ public class Highscore : MonoBehaviour
         StartCoroutine("GetScore");
 	}
 
-	void Update () 
-	{
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            StartCoroutine(PostScore(nameLabel.text, achievedScore));
-        }
-	}
+
 	
 	public IEnumerator GetScore()
 	{
@@ -69,9 +63,9 @@ public class Highscore : MonoBehaviour
 		}
 	}
 
-    void OnClick()
+    public void Submit()
     {
-        Debug.Log("Clickah mofo");
+        StartCoroutine(PostScore(nameLabel.text, achievedScore));
     }
 	
 	IEnumerator PostScore(string name, int thescore)
@@ -81,18 +75,18 @@ public class Highscore : MonoBehaviour
 
         Debug.Log(_name + " _ " + _score + " _ " + secretKey);
 
-		string hash = Md5Sum(_name + _score + secretKey).ToLower();
-		
+		string _hash = Md5Sum(_name + _score + secretKey).ToLower();
+
+        Debug.Log(_hash);
+
 		WWWForm form = new WWWForm();
 		form.AddField("name",_name);
 		form.AddField("score", _score);
-        form.AddField("hash",hash);
+        form.AddField("hash",_hash);
         
 		
 		WWW www = new WWW(PostScoreUrl,form);
-		WindowTitel = "Wait";
 		yield return www;
-		
     	if(www.text == "done") 
     	{
        		StartCoroutine("GetScore");
@@ -100,12 +94,14 @@ public class Highscore : MonoBehaviour
 		else 
 		{
 			print("There was an error posting the high score: " + www.error);
-			WindowTitel = "There was an error posting the high score";
 		}
 	}
-	
-	
 
+
+    void Update()
+    {
+
+    }
 	
 	public string Md5Sum(string input)
 	{
