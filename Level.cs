@@ -30,8 +30,13 @@ public class Level : MonoBehaviour {
            for(int i = 0; i < numParts; i++)
            {
                 int randomPart = Random.Range(0, modules.Count);
-                
-               if (previousRand != randomPart)
+
+                if (i == 0)
+                {
+                    randomPart = 9;
+                }
+
+               else if (previousRand != randomPart)
                 {
                 previousRand = randomPart;
                 }

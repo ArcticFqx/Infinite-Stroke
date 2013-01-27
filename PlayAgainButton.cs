@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayAgainButton : MonoBehaviour {
 
+
 	// Use this for initialization
     void OnClick()
     {
