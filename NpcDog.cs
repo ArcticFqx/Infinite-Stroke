@@ -9,10 +9,14 @@ public class NpcDog : MonoBehaviour {
     private Vector3 dogPosition;
     private float stamina;
     CharacterController dog;
-
+    public AudioClip[] soundDog;
+    private AudioSource sourceDog;
+    private float distance;
 	// Use this for initialization
 	void Start () 
     {
+        distance = 0;
+        sourceDog = GetComponent<AudioSource>();
         speed = 0;
         player = GameObject.FindGameObjectWithTag("Player");
         dog = transform.parent.GetComponent<CharacterController>();
@@ -30,6 +34,13 @@ public class NpcDog : MonoBehaviour {
             moveVector.x = Time.deltaTime * (distance*1.5f + 2) * (stamina > 5 ? stamina/5 : 1);
         else
             moveVector.x = 0;
+
+        if (this.distance < 0 && distance > 0)
+        {
+            sourceDog.clip = soundDog[Random.Range(0, soundDog.Length)];
+            sourceDog.Play();
+        }
+        this.distance = distance;
 
         stamina -= Time.deltaTime;
         dog.Move(moveVector);
