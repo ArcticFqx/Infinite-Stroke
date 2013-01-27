@@ -24,7 +24,7 @@ public class Highscore : MonoBehaviour
 	
     private string Score = "";
     private string Level = "";
-
+    private bool submitted = false;
 
 	public int maxNameLength = 10;
 	public int getLimitScore = 15;
@@ -60,6 +60,7 @@ public class Highscore : MonoBehaviour
 		{
        		label.text = www.text;
             Debug.Log(www.text);
+
 		}
 	}
 
@@ -70,31 +71,35 @@ public class Highscore : MonoBehaviour
 	
 	IEnumerator PostScore(string name, int thescore)
 	{
-		string _name = name;
-		string _score = thescore.ToString();
+        if (!submitted)
+        {
+            string _name = name;
+            string _score = thescore.ToString();
 
-        Debug.Log(_name + " _ " + _score + " _ " + secretKey);
+            Debug.Log(_name + " _ " + _score + " _ " + secretKey);
 
-		string _hash = Md5Sum(_name + _score + secretKey).ToLower();
+            string _hash = Md5Sum(_name + _score + secretKey).ToLower();
 
-        Debug.Log(_hash);
+            Debug.Log(_hash);
 
-		WWWForm form = new WWWForm();
-		form.AddField("name",_name);
-		form.AddField("score", _score);
-        form.AddField("hash",_hash);
-        
-		
-		WWW www = new WWW(PostScoreUrl,form);
-		yield return www;
-    	if(www.text == "done") 
-    	{
-       		StartCoroutine("GetScore");
-    	}
-		else 
-		{
-			print("There was an error posting the high score: " + www.error);
-		}
+            WWWForm form = new WWWForm();
+            form.AddField("name", _name);
+            form.AddField("score", _score);
+            form.AddField("hash", _hash);
+
+
+            WWW www = new WWW(PostScoreUrl, form);
+            yield return www;
+            if (www.text == "done")
+            {
+                StartCoroutine("GetScore");
+                submitted = true;
+            }
+            else
+            {
+                print("There was an error posting the high score: " + www.error);
+            }
+        }
 	}
 
 
