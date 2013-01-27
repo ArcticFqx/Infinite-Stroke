@@ -6,7 +6,7 @@ public class Score : MonoBehaviour
 
 
     private int score = 0;
-    private int multiplier = 1;
+    private int multiplier = 9;
     private HsHelper hs;
 
 
