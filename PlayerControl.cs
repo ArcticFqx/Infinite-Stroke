@@ -39,6 +39,9 @@ public class PlayerControl : MonoBehaviour
     private AnimControl anim;
 
     private CharacterController controller;
+
+    private Sounds sounds;
+    float footsound;
     // Use this for initialization
     void Start()
     {
@@ -56,9 +59,11 @@ public class PlayerControl : MonoBehaviour
         score = GetComponent<Score>();
         maxSpeed = 6;
         coEffect = GetComponent<CollideEffects>();
+        sounds = GetComponent<Sounds>();
         isJumping = false;
         damageDelay = 0;
         startPoint = transform.position.x;
+        footsound = speed / speedAnimRatio;
     }
 
     // Update is called once per frame
@@ -84,7 +89,7 @@ public class PlayerControl : MonoBehaviour
         {
             anim.PlaySlideAnimation();
             alive = false;
-        //  print("Dead");
+            //print("Dead");
             StartCoroutine(LoadNext());
         }
 
@@ -97,6 +102,8 @@ public class PlayerControl : MonoBehaviour
                 {
                     health -= 5;
                     damageDelay = 0.5f;
+                    sounds.PlayGrunt();
+                    sounds.PlayImpact();
                 }
             }
         }
@@ -127,6 +134,13 @@ public class PlayerControl : MonoBehaviour
             else if (!Input.GetKey(KeyCode.DownArrow))
             {
                 anim.PlayRunAnimation(speed / speedAnimRatio);
+
+                footsound -= speed/1.5f * Time.deltaTime;
+                if (footsound < 0)
+                {
+                    sounds.PlayFootStep();
+                    footsound = speed / speedAnimRatio;
+                }
             }
 
             moveVector = new Vector3(speed, 0.0f, 0.0f);
@@ -135,6 +149,7 @@ public class PlayerControl : MonoBehaviour
             {
                 moveVector.y = jumpSpeed;
                 isJumping = true;
+                sounds.PlayGrunt();
             }
 
             isSliding = Input.GetKey(KeyCode.DownArrow);
@@ -169,7 +184,7 @@ public class PlayerControl : MonoBehaviour
         if (rate < -1.5f)
         {
             health -= 3;
-           // print("Loosing health: " + health);
+            //print("Loosing health: " + health);
             rate += 1.5f;
         }
         if (keyHeart)
@@ -183,6 +198,7 @@ public class PlayerControl : MonoBehaviour
                 rate = heart ? 0.45f : 0.25f;
                 score.IncreaseScore((int)(bonusscore * 25));
                 first = false;
+                sounds.PlayHeart();
             }
             else if (!heart && keyHeartRaw > 0)
             {
@@ -190,6 +206,7 @@ public class PlayerControl : MonoBehaviour
                 heart = true;
                 SetRateTime();
                 score.IncreaseScore((int)(bonusscore * 25));
+                sounds.PlayHeart();
             }
             else if (heart && keyHeartRaw < 0)
             {
@@ -197,6 +214,7 @@ public class PlayerControl : MonoBehaviour
                 heart = false;
                 SetRateTime();
                 score.IncreaseScore((int)(timing * 5));
+                sounds.PlayHeart();
             }
             else if (keyHeartRaw != 0 && speed > 0)
             {
@@ -234,7 +252,7 @@ public class PlayerControl : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-     //   print("crash");
+        //print("crash");
     }
 
     public void AddScore(int points)
