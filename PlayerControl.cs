@@ -90,7 +90,8 @@ public class PlayerControl : MonoBehaviour
             anim.PlaySlideAnimation();
             alive = false;
             //print("Dead");
-            StartCoroutine(LoadNext());
+            StartCoroutine(LoHadNext());
+            sounds.PlayFlat();
         }
 
 

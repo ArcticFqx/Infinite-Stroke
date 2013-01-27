@@ -8,11 +8,13 @@ public class Sounds : MonoBehaviour {
     public AudioClip[] grunt;
     public AudioClip[] heart;
     public AudioClip[] impact;
+    public AudioClip flatline;
 
     private AudioSource sourceHeart;
     private AudioSource sourceImpact;
     private AudioSource sourceGrunt;
     private AudioSource sourceFootstep;
+    private AudioSource sourceFlat;
 
 
     void Start()
@@ -22,6 +24,7 @@ public class Sounds : MonoBehaviour {
         sourceImpact = sources[1];
         sourceGrunt = sources[2];
         sourceFootstep = sources[3];
+        sourceFlat = sources[4];
     }
 
     public void PlayFootStep()
@@ -45,5 +48,10 @@ public class Sounds : MonoBehaviour {
     {
         sourceGrunt.clip = grunt[Random.Range(0, grunt.Length)];
         sourceGrunt.Play();
+    }
+    public void PlayFlat()
+    {
+        sourceFlat.clip = flatline;
+        sourceFlat.Play();
     }
 }
