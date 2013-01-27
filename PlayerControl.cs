@@ -166,6 +166,12 @@ public class PlayerControl : MonoBehaviour
         float beat = 1 - Mathf.Abs(rate);
         float acc = 2;
         indicator = rate / (heart ? 0.45f : 0.25f);
+        if (rate < -1.5f)
+        {
+            health -= 3;
+            print("Loosing health: " + health);
+            rate += 1.5f;
+        }
         if (keyHeart)
         {
             float timing = Mathf.Abs(rate * acc);
@@ -196,6 +202,7 @@ public class PlayerControl : MonoBehaviour
             else if (keyHeartRaw != 0 && speed > 0)
             {
                 speed -= 1.75f;
+                health -= 5;
             }
         }
         else if (speed > 0)
