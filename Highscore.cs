@@ -18,6 +18,7 @@ public class Highscore : MonoBehaviour
     public UILabel nameLabel;
     public UIButton submitButton;
     public UILabel playerScore;
+    private HsHelper helper;
 
 	private string WindowTitel = "";
 	
@@ -31,12 +32,20 @@ public class Highscore : MonoBehaviour
 	
 	void Start () 
 	{
-		StartCoroutine("GetScore");		
+		
+        helper = GameObject.FindGameObjectWithTag("scorekeeper").GetComponent<HsHelper>();
+        achievedScore = helper.GetScore();
+        playerScore.text = achievedScore.ToString();
+
+        StartCoroutine("GetScore");
 	}
 
 	void Update () 
 	{
-	
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            StartCoroutine(PostScore(nameLabel.text, achievedScore));
+        }
 	}
 	
 	public IEnumerator GetScore()
@@ -55,21 +64,28 @@ public class Highscore : MonoBehaviour
     	}
 		else 
 		{
-			
        		label.text = www.text;
+            Debug.Log(www.text);
 		}
 	}
+
+    void OnClick()
+    {
+        Debug.Log("Clickah mofo");
+    }
 	
 	IEnumerator PostScore(string name, int thescore)
 	{
 		string _name = name;
 		string _score = thescore.ToString();
 
+        Debug.Log(_name + " _ " + _score + " _ " + secretKey);
+
 		string hash = Md5Sum(_name + _score + secretKey).ToLower();
 		
 		WWWForm form = new WWWForm();
 		form.AddField("name",_name);
-		form.AddField("score", score);
+		form.AddField("score", _score);
         form.AddField("hash",hash);
         
 		

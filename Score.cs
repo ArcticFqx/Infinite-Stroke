@@ -6,6 +6,7 @@ public class Score : MonoBehaviour {
 
     private int score = 0;
     private int multiplier = 1;
+    private HsHelper hs;
 
 
     public void IncreaseScore(int points)
@@ -37,9 +38,14 @@ public class Score : MonoBehaviour {
     {
         return score;
     }
-    
+
+    public void SaveScore()
+    {
+        hs.ReceieveScore(score);
+    }
+
     void Start () {
-	
+        hs = GameObject.FindGameObjectWithTag("scorekeeper").GetComponent<HsHelper>();
 	}
 	
 	// Update is called once per frame

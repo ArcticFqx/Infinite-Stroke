@@ -85,6 +85,7 @@ public class PlayerControl : MonoBehaviour
             anim.PlaySlideAnimation();
             alive = false;
             print("Dead");
+            StartCoroutine(LoadNext());
         }
 
 
@@ -147,6 +148,13 @@ public class PlayerControl : MonoBehaviour
         controller.Move(moveVector * Time.deltaTime);
 
 
+    }
+
+    IEnumerator LoadNext()
+    {
+        yield return new WaitForSeconds(2);
+        score.SaveScore();
+        Application.LoadLevel("highscore");
     }
 
     void Beat()
