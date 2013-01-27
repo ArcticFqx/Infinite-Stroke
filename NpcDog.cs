@@ -7,6 +7,7 @@ public class NpcDog : MonoBehaviour {
     private float speed;
     private Vector3 moveVector = Vector3.zero;
     private Vector3 dogPosition;
+    private float stamina;
     CharacterController dog;
 
 	// Use this for initialization
@@ -16,6 +17,7 @@ public class NpcDog : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         dog = transform.parent.GetComponent<CharacterController>();
         moveVector.y = -10;
+        stamina = 8;
 	}
 	
 	// Update is called once per frame
@@ -25,10 +27,11 @@ public class NpcDog : MonoBehaviour {
 
         float distance = player.transform.position.x - transform.position.x;
         if (distance > 0)
-            moveVector.x = Time.deltaTime * (distance*1.5f + 2);
+            moveVector.x = Time.deltaTime * (distance*1.5f + 2) * (stamina > 5 ? stamina/5 : 1);
         else
             moveVector.x = 0;
 
+        stamina -= Time.deltaTime;
         dog.Move(moveVector);
 	}
 
@@ -43,7 +46,7 @@ public class NpcDog : MonoBehaviour {
     {
         if (other.tag == "PlayerTrigger")
         {
-            other.GetComponent<Transform>().parent.GetComponent<PlayerControl>().health -= 0.025f;
+            other.GetComponent<Transform>().parent.GetComponent<PlayerControl>().health -= Time.deltaTime*5;
         }
     }
 }

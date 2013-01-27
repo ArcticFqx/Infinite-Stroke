@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class Score : MonoBehaviour {
+public class Score : MonoBehaviour
+{
 
 
     private int score = 0;
@@ -44,16 +45,18 @@ public class Score : MonoBehaviour {
         hs.ReceieveScore(score);
     }
 
-    void Start () {
+    void Start()
+    {
         hs = GameObject.FindGameObjectWithTag("scorekeeper").GetComponent<HsHelper>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Score: " + score);
         }
 
-	}
+    }
 }

@@ -45,7 +45,7 @@ public class PlayerControl : MonoBehaviour
         gravity = 20;
         jumpSpeed = 10.0f;
         heart = false;
-        speed = 6;
+        speed = 2;
         health = 100;
         rate = 0;
         indicator = 1;
@@ -54,7 +54,7 @@ public class PlayerControl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GameObject.FindGameObjectWithTag("Fatty").GetComponent<AnimControl>();
         score = GetComponent<Score>();
-        maxSpeed = 8;
+        maxSpeed = 6;
         coEffect = GetComponent<CollideEffects>();
         isJumping = false;
         damageDelay = 0;
