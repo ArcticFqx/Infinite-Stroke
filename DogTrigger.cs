@@ -18,6 +18,6 @@ public class DogTrigger : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-            print("player collision");
+        // print("player collision");
     }
 }

@@ -52,7 +52,6 @@ public class Level : MonoBehaviour {
             modulesSpawned++;
             if (modulesSpawned == numParts - 1)
             {
-                Debug.Log("Test");
                 GameObject chunkLoader = Instantiate(chunkLoaderPrefab, new Vector3(i * offset, 0.0f, 0.0f), Quaternion.identity) as GameObject;
                 chunkLoader.transform.parent = part.transform;
                 chunkLoader.transform.localPosition = Vector3.zero;
@@ -112,7 +111,6 @@ public class Level : MonoBehaviour {
             if (modulesSpawned == numParts - 1)
             {
                 
-                Debug.Log("Test");
                 GameObject chunkLoader = Instantiate(chunkLoaderPrefab, new Vector3((numParts / 2 * chunks.Count +1) * offset + (i * offset), 0.0f, 0.0f), Quaternion.identity) as GameObject;
                 chunkLoader.transform.parent = part.transform;
                 chunkLoader.transform.localPosition = Vector3.zero;

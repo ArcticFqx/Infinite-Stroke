@@ -84,7 +84,7 @@ public class PlayerControl : MonoBehaviour
         {
             anim.PlaySlideAnimation();
             alive = false;
-            print("Dead");
+        //  print("Dead");
             StartCoroutine(LoadNext());
         }
 
@@ -169,7 +169,7 @@ public class PlayerControl : MonoBehaviour
         if (rate < -1.5f)
         {
             health -= 3;
-            print("Loosing health: " + health);
+           // print("Loosing health: " + health);
             rate += 1.5f;
         }
         if (keyHeart)
@@ -234,7 +234,7 @@ public class PlayerControl : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        print("crash");
+     //   print("crash");
     }
 
     public void AddScore(int points)
