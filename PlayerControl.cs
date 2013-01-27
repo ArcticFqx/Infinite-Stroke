@@ -162,7 +162,7 @@ public class PlayerControl : MonoBehaviour
         float keyHeartRaw = Input.GetAxisRaw("Heart");
         bool keyHeart = Input.GetButtonDown("Heart");
         rate -= Time.deltaTime * rateMul;
-        rateMul += Time.deltaTime / 80;
+        rateMul += Time.deltaTime / 160;
         float beat = 1 - Mathf.Abs(rate);
         float acc = 2;
         indicator = rate / (heart ? 0.45f : 0.25f);
@@ -175,12 +175,13 @@ public class PlayerControl : MonoBehaviour
         if (keyHeart)
         {
             float timing = Mathf.Abs(rate * acc);
+            float bonusscore = (1 - timing) > 0 ? 1 - timing : 0;
             if (first)
             {
                 speed += 4 / (speed + 4);
                 heart = keyHeartRaw > 0;
                 rate = heart ? 0.45f : 0.25f;
-                score.IncreaseScore((int)timing * 5);
+                score.IncreaseScore((int)(bonusscore * 25));
                 first = false;
             }
             else if (!heart && keyHeartRaw > 0)
@@ -188,16 +189,14 @@ public class PlayerControl : MonoBehaviour
                 speed += (maxSpeed - 2) / (speed + 2) - timing;
                 heart = true;
                 SetRateTime();
-                print("Beat: " + beat);
-                score.IncreaseScore((int)timing * 5);
+                score.IncreaseScore((int)(bonusscore * 25));
             }
             else if (heart && keyHeartRaw < 0)
             {
                 speed += (maxSpeed - 2) / (speed + 2) - timing;
                 heart = false;
                 SetRateTime();
-                print("Beat: " + beat);
-                score.IncreaseScore((int)timing * 5);
+                score.IncreaseScore((int)(timing * 5));
             }
             else if (keyHeartRaw != 0 && speed > 0)
             {
